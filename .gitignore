@@ -1,2 +1,5 @@
 .idea
 .bin
+
+go.mod
+go.sum

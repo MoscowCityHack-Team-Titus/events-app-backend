@@ -1,4 +1,4 @@
-package events_server
+package main
 
 import "fmt"
 
