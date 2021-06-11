@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  bot:
+    image: events-server-image
+    container_name: events-server-service
+    volumes:
+      - .:/events-server:cached
