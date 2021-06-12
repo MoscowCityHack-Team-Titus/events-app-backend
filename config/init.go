@@ -8,7 +8,7 @@ import (
 const Directory = "./config"
 
 func getConfigFiles() []string {
-	return []string{"server-config.yml"}
+	return []string{"server-config", "db"}
 }
 
 func Init() {

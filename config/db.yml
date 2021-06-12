@@ -1,0 +1,8 @@
+db:
+  host: "db"
+  port: "5432"
+  password: "12345678"
+  database: "events"
+  user: "app"
+  sslmode: "disable"
+
