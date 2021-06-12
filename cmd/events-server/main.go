@@ -8,14 +8,12 @@ import (
 	_ "github.com/MCHTitus/events-app-backend/migrations"
 	"github.com/spf13/viper"
 	"log"
-	"net/http"
+  	"net/http"
 	"time"
 )
 
 func main() {
 	config.Init()
-
-	time.Sleep(time.Second * 5)
 
 	db, err := repository.NewPSQLConnection(repository.PSQLConfig{
 		Host: viper.GetString("db.host"),
@@ -30,7 +28,12 @@ func main() {
 		return
 	}
 
-	repository.NewRepository(db)
+	_, _, err = repository.NewRepository(db) // Второй аргумент для обращения к БД
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	fmt.Println("App finished successfully!")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", apiserver.Home)
