@@ -1,8 +1,29 @@
 version: "3.7"
 
 services:
-  bot:
+  events-server:
     image: events-server-image
-    container_name: events-server-service
     volumes:
       - .:/events-server:cached
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=12345678
+
+  db:
+    restart: always
+    container_name: db
+    image: postgres:10-alpine
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER="${POSTGRES_USER}"
+      - POSTGRES_DBNAME="${POSTGRES_DBNAME}"
+      - POSTGRES_DBPASSWORD="${POSTGRES_DBPASSWORD}"
+      - POSTGRES_HOST="${POSTGRES_HOST}"
+      - POSTGRES_SSL="${POSTGRES_SSL}"
+      - POSTGRES_PORT="${POSTGRES_PORT}"
+    ports:
+      - 5436:5432

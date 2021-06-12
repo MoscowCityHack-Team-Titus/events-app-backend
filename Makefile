@@ -1,9 +1,14 @@
 .PHONY: all
 
+include .env
+export
+
 PROJ_PATH := ${CURDIR}
 DOCKER_PATH := ${PROJ_PATH}/docker
 
 APP=events-server
+MIGRATION_TOOL=goose
+MIGRATIONS_DIR=migrations
 
 BASIC_IMAGE=default
 IMAGE_POSTFIX=-image
@@ -23,8 +28,30 @@ app-up: build-app
 
 all: app-setup-and-up
 
-app-bot-bash:
+app-bash:
 	docker-compose run --rm --no-deps --name events-server-service ${APP} bash
 
 app-up-local: build-app
-	./.bin/bot
+	./.bin/events-server
+
+db-bash:
+	docker-compose run --rm --no-deps --name events-server-db db ash
+
+goose-init:
+	go build -o .bin/goose cmd/${MIGRATION_TOOL}/main.go
+	chmod ugo+x .bin/${MIGRATION_TOOL}
+
+db-up:
+	docker-compose run --rm --no-deps --name events-server-db db ash
+
+db-migrate-status: goose-init
+	docker-compose run --rm events-server .bin/goose -dir ${MIGRATIONS_DIR} postgres \
+		"user=${POSTGRES_USER} host=${POSTGRES_HOST} port=${POSTGRES_PORT} password=${POSTGRES_DBPASSWORD} dbname=${POSTGRES_DBNAME} sslmode=${POSTGRES_SSL}" status
+
+db-migrate-up: goose-init
+	docker-compose run --rm events-server .bin/goose -dir ${MIGRATIONS_DIR} postgres \
+        "user=${POSTGRES_USER} host=${POSTGRES_HOST} port=${POSTGRES_PORT} password=${POSTGRES_DBPASSWORD} dbname=${POSTGRES_DBNAME} sslmode=${POSTGRES_SSL}" up
+
+db-migrate-down: goose-init
+	docker-compose run --rm events-server .bin/goose -dir ${MIGRATIONS_DIR} postgres \
+        "user=${POSTGRES_USER} host=${POSTGRES_HOST} port=${POSTGRES_PORT} password=${POSTGRES_DBPASSWORD} dbname=${POSTGRES_DBNAME} sslmode=${POSTGRES_SSL}" down
