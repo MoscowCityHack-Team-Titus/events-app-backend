@@ -7,13 +7,10 @@ import (
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	_ "github.com/tetovske/events-app-backend/migrations"
 	"log"
-	"time"
 )
 
 func main() {
 	config.Init()
-
-	time.Sleep(time.Second * 5)
 
 	db, err := repository.NewPSQLConnection(repository.PSQLConfig{
 		Host: viper.GetString("db.host"),
@@ -28,6 +25,11 @@ func main() {
 		return
 	}
 
-	repository.NewRepository(db)
+	_, _, err = repository.NewRepository(db) // Второй аргумент для обращения к БД
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	fmt.Println("App finished successfully!")
 }
