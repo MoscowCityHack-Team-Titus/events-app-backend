@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/MCHTitus/events-app-backend/config"
+	"github.com/MCHTitus/events-app-backend/internal/app/apiserver"
+	"github.com/MCHTitus/events-app-backend/internal/app/repository"
+	_ "github.com/MCHTitus/events-app-backend/migrations"
 	"github.com/spf13/viper"
-	"github.com/brshpl/events-app-backend/internal/app/apiserver"
-	"github.com/tetovske/events-app-backend/config"
-	"github.com/tetovske/events-app-backend/internal/app/repository"
-	_ "github.com/tetovske/events-app-backend/migrations"
 	"log"
-	"time"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -40,6 +40,6 @@ func main() {
 	mux.HandleFunc("/chat", apiserver.InteractChat)
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
-	err := http.ListenAndServe(":4000", mux)
+	err = http.ListenAndServe(":4000", mux)
 	log.Fatal(err)
 }
