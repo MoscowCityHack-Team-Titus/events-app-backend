@@ -1,4 +1,4 @@
-package main
+package apiserver
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 // TODO: разобраться, как идентифицировать пользователя (JWT, Cookies or smth)
 
-func home(w http.ResponseWriter, r *http.Request) {
+func Home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -22,7 +22,21 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getEventInfo(w http.ResponseWriter, r *http.Request) {
+func GetEvents(w http.ResponseWriter, r *http.Request) {
+	respByteString, err := getEventsFromApi(r)
+	if err != nil {
+		http.Error(w, "400 Ошибка в запросе", http.StatusBadRequest)
+		return
+	}
+
+	_, err = w.Write(respByteString)
+	if err != nil {
+		http.Error(w, "400 Ошибка в запросе", http.StatusBadRequest)
+		return
+	}
+}
+
+func GetEventInfo(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
@@ -35,7 +49,7 @@ func getEventInfo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func likeEvent(w http.ResponseWriter, r *http.Request) {
+func LikeEvent(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
 		http.Error(w, "Метод не дозволен", 405)
@@ -56,7 +70,7 @@ func likeEvent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func interactChat(w http.ResponseWriter, r *http.Request) {
+func InteractChat(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
