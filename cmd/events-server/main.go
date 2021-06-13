@@ -44,6 +44,9 @@ func main() {
 	mux.HandleFunc("/wishlist", userHandler.Wishlist)
 	mux.HandleFunc("/recommendations", userHandler.Recommendations)
 
+	eventHandler := handlers.NewEventHandler(repo)
+	mux.HandleFunc("/comment", eventHandler.SendToChat)
+
 // TODO***********************************************************************
 //	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!
 // TODO***********************************************************************

@@ -11,8 +11,12 @@ type Authentication interface {
 
 type EventManager interface {
 	AddToWishlist(req *AddToWishListJSON) (*models.User, error)
-	GetWishlist() (*models.User, error)
+	GetWishlist() ([]models.ApiSpecificEvent, error)
 	Recommendations() (*models.ApiEventsPage, error)
+	SendMessage(req *SendMessageToChatJSON) (*models.Chat, error)
+	UpdateMessage(req *SendMessageToChatJSON) (*models.Chat, error)
+	DeleteMessage(req *SendMessageToChatJSON) (*models.Chat, error)
+	GetMessages() (*models.Chat, error)
 }
 
 type Service struct {
