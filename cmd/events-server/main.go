@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"github.com/tetovske/events-app-backend/config"
+	"github.com/tetovske/events-app-backend/internal/app/apiserver"
 	"github.com/tetovske/events-app-backend/internal/app/apiserver/handlers"
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	_ "github.com/tetovske/events-app-backend/migrations"
@@ -38,12 +39,16 @@ func main() {
 	mux.HandleFunc("/", handlers.Home)
 	mux.HandleFunc("/events/", handlers.GetEvents)
 	mux.HandleFunc("/event", handlers.GetEventInfo)
-	mux.HandleFunc("/like", handlers.LikeEvent) // TODO: мейби объединить с '/event', но с методом POST?
+	mux.HandleFunc("/like", handlers.LikeEvent)
 	mux.HandleFunc("/chat", handlers.InteractChat)
 
 	userHandler := handlers.NewUserHandler(repo)
 	mux.HandleFunc("/register", userHandler.RegisterUserHandler)
 	mux.HandleFunc("/wishlist", userHandler.Wishlist)
+
+// TODO***********************************************************************
+	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!
+// TODO***********************************************************************
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
 	if err = http.ListenAndServe(":4000", mux); err != nil {
