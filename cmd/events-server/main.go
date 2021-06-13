@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/MCHTitus/events-app-backend/config"
-	"github.com/MCHTitus/events-app-backend/internal/app/apiserver"
-	"github.com/MCHTitus/events-app-backend/internal/app/repository"
-	_ "github.com/MCHTitus/events-app-backend/migrations"
 	"github.com/spf13/viper"
+	"github.com/tetovske/events-app-backend/config"
+	"github.com/tetovske/events-app-backend/internal/app/apiserver/handlers"
+	"github.com/tetovske/events-app-backend/internal/app/repository"
+	_ "github.com/tetovske/events-app-backend/migrations"
 	"log"
-  	"net/http"
+	"net/http"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 
-	_, _, err = repository.NewRepository(db) // Второй аргумент для обращения к БД
+	repo, _, err := repository.NewRepository(db)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -35,13 +35,17 @@ func main() {
 
 	fmt.Println("App finished successfully!")
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", apiserver.Home)
-	mux.HandleFunc("/events/", apiserver.GetEvents)
-	mux.HandleFunc("/event", apiserver.GetEventInfo)
-	mux.HandleFunc("/like", apiserver.LikeEvent) // TODO: мейби объединить с '/event', но с методом POST?
-	mux.HandleFunc("/chat", apiserver.InteractChat)
+	mux.HandleFunc("/", handlers.Home)
+	mux.HandleFunc("/events/", handlers.GetEvents)
+	mux.HandleFunc("/event", handlers.GetEventInfo)
+	mux.HandleFunc("/like", handlers.LikeEvent) // TODO: мейби объединить с '/event', но с методом POST?
+	mux.HandleFunc("/chat", handlers.InteractChat)
+
+	userHandler := handlers.NewUserHandler(repo)
+	mux.HandleFunc("/register", userHandler.RegisterUserHandler)
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
-	err = http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
+	if err = http.ListenAndServe(":4000", mux); err != nil {
+		log.Fatal(err)
+	}
 }

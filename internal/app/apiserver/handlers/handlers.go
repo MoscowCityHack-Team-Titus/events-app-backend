@@ -1,7 +1,8 @@
-package apiserver
+package handlers
 
 import (
 	"fmt"
+	"github.com/tetovske/events-app-backend/internal/app/apiserver"
 	"net/http"
 	"strconv"
 )
@@ -23,7 +24,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
-	respByteString, err := getEventsFromApi(r)
+	respByteString, err := apiserver.GetEventsFromApi(r)
 	if err != nil {
 		http.Error(w, "400 Ошибка в запросе", http.StatusBadRequest)
 		return
