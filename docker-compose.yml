@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/events-server:cached
     ports:
-      - 8080:8080
+      - 4000:4000
     depends_on:
       - db
     environment:
@@ -19,11 +19,6 @@ services:
     volumes:
       - ./.database/postgres/data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER="${POSTGRES_USER}"
-      - POSTGRES_DBNAME="${POSTGRES_DBNAME}"
-      - POSTGRES_DBPASSWORD="${POSTGRES_DBPASSWORD}"
-      - POSTGRES_HOST="${POSTGRES_HOST}"
-      - POSTGRES_SSL="${POSTGRES_SSL}"
-      - POSTGRES_PORT="${POSTGRES_PORT}"
+      - POSTGRES_PASSWORD="${POSTGRES_DBPASSWORD}"
     ports:
       - 5436:5432

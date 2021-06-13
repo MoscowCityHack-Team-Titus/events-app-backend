@@ -1,2 +1,2 @@
 server:
-  basic-message: "privet"
+  port: "4000"
