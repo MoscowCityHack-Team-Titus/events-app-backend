@@ -10,7 +10,7 @@ import (
 )
 
 // TODO: refactoring (REFACTORING!) this function
-func getEventsFromApi(r *http.Request) ([]byte, error) {
+func GetEventsFromApi(r *http.Request) ([]byte, error) {
 	getOnlyApiParams(r)
 
 	fmt.Printf("\n\n")

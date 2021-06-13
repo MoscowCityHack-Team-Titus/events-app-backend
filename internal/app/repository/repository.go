@@ -9,9 +9,6 @@ import (
 	"log"
 )
 
-// import "github.com/jmoiron/sqlx"
-// import "github.com/golang-migrate/migrate/v4"
-
 type User interface {
 	CreateUser(user models.User)
 	DeleteUser(user models.User)
@@ -28,6 +25,7 @@ type Preference interface {
 }
 
 type Repository struct {
+	GDB *gorm.DB
 	User
 	Event
 	Preference
@@ -43,6 +41,7 @@ func NewRepository(db *sql.DB) (*Repository, *gorm.DB, error) {
 	}
 
 	return &Repository{
+		GDB: gdb,
 		User: implementation.NewUserRepo(gdb),
 		Event: implementation.NewEventRepo(gdb),
 		Preference: implementation.NewPreferenceRepo(gdb),
