@@ -9,10 +9,18 @@ type Authentication interface {
 	ChangeUser(req *RegisterUserJSON) (*models.User, error)
 }
 
+type EventManager interface {
+	AddToWishlist(req *AddToWishListJSON) (*models.User, error)
+}
+
 type Service struct {
 	Authentication
+	EventManager
 }
 
 func NewService(repo *repository.Repository) *Service {
-	return &Service{Authentication: NewUserAuthenticationService(repo)}
+	return &Service{
+		Authentication: NewUserAuthenticationService(repo),
+		EventManager: NewEventService(repo),
+	}
 }
