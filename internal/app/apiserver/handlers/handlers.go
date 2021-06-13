@@ -7,15 +7,11 @@ import (
 	"strconv"
 )
 
-// TODO: разобраться, как идентифицировать пользователя (JWT, Cookies or smth)
-
 func Home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-
-	// TODO: куча работы, связанной с показом релевантных событий
 
 	_, err := w.Write([]byte("Привет из Афиши"))
 	if err != nil {

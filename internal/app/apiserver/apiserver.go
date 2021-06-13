@@ -1,7 +1,9 @@
 package apiserver
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/tetovske/events-app-backend/internal/app/repository"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -9,7 +11,6 @@ import (
 	"strings"
 )
 
-// TODO: refactoring (REFACTORING!) this function
 func GetEventsFromApi(r *http.Request) ([]byte, error) {
 	getOnlyApiParams(r)
 
@@ -35,20 +36,14 @@ func GetEventsFromApi(r *http.Request) ([]byte, error) {
 		log.Printf("Error reading body: %v", err)
 		return nil, err
 	}
-	//bs := make([]byte, 200000)
-	//defer func(Body io.ReadCloser) {
-	//	err := Body.Close()
-	//	if err != nil {
-	//		log.Printf(err.Error())
-	//	}
-	//}(resp.Body)
-	//for true {
-	//	n, err := resp.Body.Read(bs)
-	//
-	//	if n == 0 || err != nil{
-	//		break
-	//	}
-	//}
+
+	var events []repository.Event
+
+	err = json.Unmarshal(body, &events)
+	if err != nil {
+		log.Println("Error Unmarshal")
+		println("Error Unmarshal")
+	}
 
 	return body, nil
 }
