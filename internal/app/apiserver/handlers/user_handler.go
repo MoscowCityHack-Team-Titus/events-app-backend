@@ -63,12 +63,12 @@ func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	} else if r.Method == http.MethodGet {
-		usr, err := services.NewService(rc.repo).EventManager.GetWishlist()
+		events, err := services.NewService(rc.repo).EventManager.GetWishlist()
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 		}
 
-		resp, _ := json.Marshal(usr)
+		resp, _ := json.Marshal(events)
 		if _, err := w.Write(resp); err != nil {
 			log.Fatal(err)
 		}

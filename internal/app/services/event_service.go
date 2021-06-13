@@ -14,6 +14,12 @@ type AddToWishListJSON struct {
 	Wishlist 	bool
 }
 
+type SendMessageToChatJSON struct {
+	MessageID 	uint
+	EventID 	uint
+	Message 	string
+}
+
 type EventService struct {
 	repo *repository.Repository
 }
@@ -48,12 +54,30 @@ func (r *EventService) AddToWishlist(req *AddToWishListJSON) (*models.User, erro
 	return &usr, nil
 }
 
-func (r *EventService) GetWishlist() (*models.User, error) {
+func (r *EventService) GetWishlist() ([]models.ApiSpecificEvent, error) {
 	var usr models.User
 
 	r.repo.GDB.Preload("Likes").Find(&usr)
+	events := make([]models.ApiSpecificEvent, 0)
 
-	return &usr, nil
+	for _, like := range usr.Likes {
+		var event models.ApiSpecificEvent
+
+		url := fmt.Sprintf("https://www.mos.ru/api/newsfeed/v4/frontend/json/afisha/%d?expand=spheres", like.EventID)
+		resp, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+
+		body, _ := ioutil.ReadAll(resp.Body)
+		if err = json.Unmarshal(body, &event); err != nil {
+			return nil, err
+		}
+
+		events = append(events, event)
+	}
+
+	return events, nil
 }
 func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 	var usr models.User
@@ -86,4 +110,49 @@ func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 	}
 
 	return &events, nil
+}
+
+func (r *EventService) GetMessages() (*models.Chat, error) {
+
+	return nil, nil
+}
+
+func (r *EventService) SendMessage(req *SendMessageToChatJSON) (*models.Chat, error) {
+	var usr	models.User
+
+	fmt.Println("TEST1")
+	fmt.Println(req.Message)
+	fmt.Println(req.MessageID)
+	fmt.Println(req.EventID)
+
+	r.repo.GDB.First(&usr)
+
+	chat := models.Chat{
+		EventID: req.EventID,
+	}
+	r.repo.GDB.Model(&models.Chat{}).FirstOrCreate(&chat)
+	msg := models.Message{
+		UserID:  usr.ID,
+		Message: req.Message,
+	}
+	chat.Messages = append(chat.Messages, msg)
+	r.repo.GDB.Save(&chat)
+
+	return &chat, nil
+}
+
+func (r *EventService) UpdateMessage(req *SendMessageToChatJSON) (*models.Chat, error) {
+	var msg models.Chat
+
+
+	return &msg, nil
+}
+
+func (r *EventService) DeleteMessage(req *SendMessageToChatJSON) (*models.Chat, error) {
+	var msg models.Chat
+
+	r.repo.GDB.Model(&models.Chat{}).Where("id = ?", req.MessageID).First(&msg)
+	r.repo.GDB.Delete(&msg)
+
+	return nil, nil
 }
