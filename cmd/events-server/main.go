@@ -43,6 +43,7 @@ func main() {
 
 	userHandler := handlers.NewUserHandler(repo)
 	mux.HandleFunc("/register", userHandler.RegisterUserHandler)
+	mux.HandleFunc("/wishlist", userHandler.Wishlist)
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
 	if err = http.ListenAndServe(":4000", mux); err != nil {

@@ -42,3 +42,31 @@ func (rc *UserHandler) RegisterUserHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 }
+
+func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
+	var req services.AddToWishListJSON
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Println(err)
+		http.Error(w, "Invalid request", 422)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		usr, err := services.NewService(rc.repo).EventManager.AddToWishlist(&req)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		}
+
+		resp, _ := json.Marshal(usr)
+		if _, err := w.Write(resp); err != nil {
+			log.Fatal(err)
+		}
+	} else if r.Method == http.MethodGet {
+
+	} else {
+		w.Header().Set("Allow", http.MethodPost)
+		http.Error(w, "Метод не дозволен", 405)
+		return
+	}
+}
