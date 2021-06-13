@@ -40,6 +40,8 @@ func NewRepository(db *sql.DB) (*Repository, *gorm.DB, error) {
 		return nil, gdb, err
 	}
 
+	gdb.AutoMigrate(&models.Like{})
+
 	return &Repository{
 		GDB: gdb,
 		User: implementation.NewUserRepo(gdb),
