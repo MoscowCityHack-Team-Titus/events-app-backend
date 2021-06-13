@@ -11,4 +11,5 @@ type User struct {
 	Age			string
 	Events 		[]*Event `gorm:"many2many:events_users;"`
 	Preferences []*Preference `gorm:"many2many:preferences_users;"`
+	Likes		[]Like
 }
