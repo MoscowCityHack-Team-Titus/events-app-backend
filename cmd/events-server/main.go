@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"github.com/tetovske/events-app-backend/config"
-	"github.com/tetovske/events-app-backend/internal/app/apiserver"
 	"github.com/tetovske/events-app-backend/internal/app/apiserver/handlers"
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	_ "github.com/tetovske/events-app-backend/migrations"
@@ -47,7 +46,7 @@ func main() {
 	mux.HandleFunc("/wishlist", userHandler.Wishlist)
 
 // TODO***********************************************************************
-	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!
+//	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!
 // TODO***********************************************************************
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
