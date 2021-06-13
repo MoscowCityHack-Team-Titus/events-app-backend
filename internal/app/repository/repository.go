@@ -2,8 +2,8 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/MCHTitus/events-app-backend/internal/app/repository/implementation"
-	"github.com/MCHTitus/events-app-backend/internal/app/repository/models"
+	"github.com/tetovske/events-app-backend/internal/app/repository/implementation"
+	"github.com/tetovske/events-app-backend/internal/app/repository/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"

@@ -1,7 +1,7 @@
 package implementation
 
 import (
-	"github.com/MCHTitus/events-app-backend/internal/app/repository/models"
+	"github.com/tetovske/events-app-backend/internal/app/repository/models"
 	"gorm.io/gorm"
 	"log"
 )
