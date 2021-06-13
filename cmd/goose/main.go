@@ -3,9 +3,9 @@ package main
 import (
 	"database/sql"
 	"flag"
+	_ "github.com/MCHTitus/events-app-backend/migrations"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose"
-	_ "github.com/tetovske/events-app-backend/migrations"
 	"log"
 	"os"
 )
