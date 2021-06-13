@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
 	"github.com/tetovske/events-app-backend/config"
 	"github.com/tetovske/events-app-backend/internal/app/apiserver"
@@ -34,7 +33,6 @@ func main() {
 		return
 	}
 
-	fmt.Println("App finished successfully!")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handlers.Home)
 	mux.HandleFunc("/events/", handlers.GetEvents)
@@ -45,6 +43,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(repo)
 	mux.HandleFunc("/register", userHandler.RegisterUserHandler)
 	mux.HandleFunc("/wishlist", userHandler.Wishlist)
+	mux.HandleFunc("/recommendations", userHandler.Recommendations)
 
 // TODO***********************************************************************
 	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!

@@ -1,8 +1,12 @@
 package services
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	"github.com/tetovske/events-app-backend/internal/app/repository/models"
+	"io/ioutil"
+	"net/http"
 )
 
 type AddToWishListJSON struct {
@@ -50,4 +54,36 @@ func (r *EventService) GetWishlist(req *AddToWishListJSON) (*models.User, error)
 	r.repo.GDB.Preload("Likes").Find(&usr)
 
 	return &usr, nil
+}
+func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
+	var usr models.User
+
+	r.repo.GDB.Preload("Preferences").Find(&usr)
+	events := models.ApiEventsPage{}
+	prefPerSection := 10 / len(usr.Preferences)
+	for i, pref := range usr.Preferences {
+		url := fmt.Sprintf("https://www.mos.ru/api/newsfeed/v4/frontend/json/afisha?expand=spheres&filter={\"spheres.title\":\"%s\"}&per-page=%d", pref.Title, prefPerSection)
+		resp, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+
+		body, _ := ioutil.ReadAll(resp.Body)
+		if i == 0 {
+			if err = json.Unmarshal(body, &events); err != nil {
+				return nil, err
+			}
+		} else {
+			temp := models.ApiEventsPage{}
+			if err = json.Unmarshal(body, &temp); err != nil {
+				return nil, err
+			}
+
+			for _, item := range temp.Items {
+				events.Items = append(events.Items, item)
+			}
+		}
+	}
+
+	return &events, nil
 }

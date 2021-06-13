@@ -63,7 +63,7 @@ func getOnlyApiParams(r *http.Request) *http.Request {
 }
 
 func InitDb(db *sql.DB) {
-	resp, err := http.Get(`https://www.mos.ru/api/newsfeed/v4/frontend/json/afisha?filter={">created_at":"2021-05-15"}`)
+	resp, err := http.Get(`https://www.mos.ru/api/newsfeed/v4/frontend/json/afisha?expand=spheres&filter={">created_at":"2021-05-15"}`)
 	if err != nil {
 		return
 	}
@@ -87,6 +87,7 @@ func InitDb(db *sql.DB) {
 			ID: 		 uint(t.ID),
 			Title:       t.Title,
 			Description: t.Text,
+			Sphere: 	 t.Spheres[0].Title,
 			Users:       nil,
 		}
 		_, gormDB, err := repository.NewRepository(db)

@@ -7,5 +7,6 @@ type Event struct {
 	ID 			uint
 	Title 		string
 	Description string
+	Sphere		string
 	Users 		[]*User `gorm:"many2many:events_users;"`
 }

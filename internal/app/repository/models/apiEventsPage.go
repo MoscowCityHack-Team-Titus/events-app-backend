@@ -193,6 +193,13 @@ type ApiEventsPage struct {
 			} `json:"4x1_s"`
 		} `json:"image"`
 		Organizations []int `json:"organizations"`
+		Spheres       []struct {
+			ID        int    `json:"id"`
+			Title     string `json:"title"`
+			Special   int    `json:"special"`
+			Activated int    `json:"activated"`
+			Priority  int    `json:"priority"`
+		} `json:"spheres"`
 	} `json:"items"`
 	Links struct {
 		Self struct {

@@ -78,3 +78,21 @@ func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (rc *UserHandler) Recommendations(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		events, err := services.NewService(rc.repo).EventManager.Recommendations()
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		}
+
+		resp, _ := json.Marshal(events)
+		if _, err := w.Write(resp); err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		w.Header().Set("Allow", http.MethodPost)
+		http.Error(w, "Метод не дозволен", 405)
+		return
+	}
+}
