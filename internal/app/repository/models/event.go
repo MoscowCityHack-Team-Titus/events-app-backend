@@ -7,5 +7,5 @@ type Event struct {
 	ID 			uint
 	Title 		string
 	Description string
-	Users 		[]User `gorm:"many2many:events_users;"`
+	Users 		[]*User `gorm:"many2many:events_users;"`
 }
