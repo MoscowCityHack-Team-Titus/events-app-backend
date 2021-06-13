@@ -63,7 +63,15 @@ func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	} else if r.Method == http.MethodGet {
+		usr, err := services.NewService(rc.repo).EventManager.GetWishlist(&req)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		}
 
+		resp, _ := json.Marshal(usr)
+		if _, err := w.Write(resp); err != nil {
+			log.Fatal(err)
+		}
 	} else {
 		w.Header().Set("Allow", http.MethodPost)
 		http.Error(w, "Метод не дозволен", 405)
