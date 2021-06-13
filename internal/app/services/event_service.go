@@ -1,13 +1,12 @@
 package services
 
 import (
-	"fmt"
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	"github.com/tetovske/events-app-backend/internal/app/repository/models"
 )
 
 type AddToWishListJSON struct {
-	Id 			uint
+	Id 			int
 	Wishlist 	bool
 }
 
@@ -22,36 +21,33 @@ func NewEventService(repo *repository.Repository) *EventService {
 func (r *EventService) AddToWishlist(req *AddToWishListJSON) (*models.User, error) {
 	var usr models.User
 
-	r.repo.GDB.Take(&usr)
-	if &usr != nil {
-		var event models.Event
-		r.repo.GDB.Model(&models.Event{}).Where("id = ?", req.Id).First(&event)
+	r.repo.GDB.Preload("Likes").Find(&usr)
 
-		if req.Wishlist {
-			usr.Events = append(usr.Events, &event)
-		} else {
-			var updEvents []*models.Event
-			for _, event := range usr.Events {
-				if event.ID != req.Id {
-					updEvents = append(updEvents, event)
-				}
-			}
-			usr.Events = updEvents
+	if req.Wishlist {
+		var likesCount int64
+
+		r.repo.GDB.Model(&models.Like{}).Where("user_id = ? and event_id = ?", usr.ID, req.Id).Count(&likesCount)
+
+		if likesCount < 1 {
+			usr.Likes = append(usr.Likes, models.Like{EventID: req.Id})
+			r.repo.GDB.Save(&usr)
 		}
-
-		r.repo.GDB.Save(&usr)
-		return &usr, nil
 	} else {
-		return nil, nil
+		for _, like := range usr.Likes {
+			if like.EventID == req.Id {
+				r.repo.GDB.Delete(&like)
+				break
+			}
+		}
+		r.repo.GDB.Preload("Likes").Find(&usr)
 	}
+	return &usr, nil
 }
 
 func (r *EventService) GetWishlist(req *AddToWishListJSON) (*models.User, error) {
 	var usr models.User
 
-	r.repo.GDB.Preload("Events").Find(&usr)
-
-	fmt.Println(len(usr.Events))
+	r.repo.GDB.Preload("Likes").Find(&usr)
 
 	return &usr, nil
 }
