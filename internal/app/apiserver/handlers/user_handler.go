@@ -44,9 +44,15 @@ func (rc *UserHandler) RegisterUserHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
-	var req services.AddToWishListJSON
-
 	if r.Method == http.MethodPost {
+		var req services.AddToWishListJSON
+
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Println(err)
+			http.Error(w, "Invalid request", 422)
+			return
+		}
+
 		usr, err := services.NewService(rc.repo).EventManager.AddToWishlist(&req)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -57,7 +63,7 @@ func (rc *UserHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	} else if r.Method == http.MethodGet {
-		usr, err := services.NewService(rc.repo).EventManager.GetWishlist(&req)
+		usr, err := services.NewService(rc.repo).EventManager.GetWishlist()
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 		}

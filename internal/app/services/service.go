@@ -11,7 +11,7 @@ type Authentication interface {
 
 type EventManager interface {
 	AddToWishlist(req *AddToWishListJSON) (*models.User, error)
-	GetWishlist(req *AddToWishListJSON) (*models.User, error)
+	GetWishlist() (*models.User, error)
 	Recommendations() (*models.ApiEventsPage, error)
 }
 

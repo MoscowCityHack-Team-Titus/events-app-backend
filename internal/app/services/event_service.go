@@ -48,7 +48,7 @@ func (r *EventService) AddToWishlist(req *AddToWishListJSON) (*models.User, erro
 	return &usr, nil
 }
 
-func (r *EventService) GetWishlist(req *AddToWishListJSON) (*models.User, error) {
+func (r *EventService) GetWishlist() (*models.User, error) {
 	var usr models.User
 
 	r.repo.GDB.Preload("Likes").Find(&usr)
