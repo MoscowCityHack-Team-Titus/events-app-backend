@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"github.com/tetovske/events-app-backend/internal/app/repository"
 	"github.com/tetovske/events-app-backend/internal/app/repository/models"
 )
@@ -43,4 +44,14 @@ func (r *EventService) AddToWishlist(req *AddToWishListJSON) (*models.User, erro
 	} else {
 		return nil, nil
 	}
+}
+
+func (r *EventService) GetWishlist(req *AddToWishListJSON) (*models.User, error) {
+	var usr models.User
+
+	r.repo.GDB.Preload("Events").Find(&usr)
+
+	fmt.Println(len(usr.Events))
+
+	return &usr, nil
 }

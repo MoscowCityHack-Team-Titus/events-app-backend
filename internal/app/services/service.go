@@ -11,6 +11,7 @@ type Authentication interface {
 
 type EventManager interface {
 	AddToWishlist(req *AddToWishListJSON) (*models.User, error)
+	GetWishlist(req *AddToWishListJSON) (*models.User, error)
 }
 
 type Service struct {
