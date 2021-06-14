@@ -16,7 +16,6 @@ type EventManager interface {
 	SendMessage(req *SendMessageToChatJSON) (*models.Chat, error)
 	UpdateMessage(req *SendMessageToChatJSON) (*models.Chat, error)
 	DeleteMessage(req *SendMessageToChatJSON) (*models.Chat, error)
-	GetMessages() (*models.Chat, error)
 }
 
 type Service struct {

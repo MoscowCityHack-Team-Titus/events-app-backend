@@ -1,0 +1,18 @@
+basePath: /
+host: localhost:4000
+info:
+  contact: {}
+  description: Планирование досуговых мероприятий в приложении "Моя Москва". Серверная
+    часть.
+  title: Events App API
+  version: "1.0"
+paths:
+  /register:
+    post:
+      consumes:
+      - application/json
+      operationId: get-string-by-int
+      produces:
+      - application/json
+      summary: Изменить настройки заглушки пользователя
+swagger: "2.0"

@@ -113,18 +113,8 @@ func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 	return &events, nil
 }
 
-func (r *EventService) GetMessages() (*models.Chat, error) {
-
-	return nil, nil
-}
-
 func (r *EventService) SendMessage(req *SendMessageToChatJSON) (*models.Chat, error) {
 	var usr	models.User
-
-	fmt.Println("TEST1")
-	fmt.Println(req.Message)
-	fmt.Println(req.MessageID)
-	fmt.Println(req.EventID)
 
 	r.repo.GDB.First(&usr)
 

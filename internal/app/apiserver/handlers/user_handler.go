@@ -16,6 +16,12 @@ func NewUserHandler(repo *repository.Repository) *UserHandler {
 	return &UserHandler{repo: repo}
 }
 
+// Изменить настройки заглушки пользователя
+// @Summary Изменить настройки заглушки пользователя
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Router /register [post]
 func (rc *UserHandler) RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		var req services.RegisterUserJSON
