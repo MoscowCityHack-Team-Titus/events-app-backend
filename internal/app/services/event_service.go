@@ -84,9 +84,10 @@ func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 
 	r.repo.GDB.Preload("Preferences").Find(&usr)
 	events := models.ApiEventsPage{}
-	prefPerSection := 10 / len(usr.Preferences)
+	prefPerSection := 15 / len(usr.Preferences)
 	for i, pref := range usr.Preferences {
 		url := fmt.Sprintf("https://www.mos.ru/api/newsfeed/v4/frontend/json/afisha?expand=spheres&filter={\"spheres.title\":\"%s\"}&per-page=%d", pref.Title, prefPerSection)
+		fmt.Println(url)
 		resp, err := http.Get(url)
 		if err != nil {
 			return nil, err
@@ -99,6 +100,7 @@ func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 			}
 		} else {
 			temp := models.ApiEventsPage{}
+			fmt.Println(string(body))
 			if err = json.Unmarshal(body, &temp); err != nil {
 				return nil, err
 			}
@@ -108,7 +110,6 @@ func (r *EventService) Recommendations() (*models.ApiEventsPage, error) {
 			}
 		}
 	}
-
 	return &events, nil
 }
 
