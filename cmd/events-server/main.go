@@ -10,6 +10,12 @@ import (
 	"net/http"
 )
 
+// @title Events App API
+// @version 1.0
+// @description Планирование досуговых мероприятий в приложении "Моя Москва". Серверная часть.
+
+// @host localhost:4000
+// @BasePath /
 func main() {
 	config.Init()
 
@@ -46,10 +52,6 @@ func main() {
 
 	eventHandler := handlers.NewEventHandler(repo)
 	mux.HandleFunc("/comment", eventHandler.SendToChat)
-
-// TODO***********************************************************************
-//	apiserver.InitDb(db) // TODO: закомментировать после первого запуска!
-// TODO***********************************************************************
 
 	log.Println("Запуск веб-сервера на http://127.0.0.1:4000")
 	if err = http.ListenAndServe(":4000", mux); err != nil {

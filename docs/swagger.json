@@ -1,0 +1,25 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Планирование досуговых мероприятий в приложении \"Моя Москва\". Серверная часть.",
+        "title": "Events App API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+    "basePath": "/",
+    "paths": {
+        "/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Изменить настройки заглушки пользователя",
+                "operationId": "get-string-by-int"
+            }
+        }
+    }
+}
