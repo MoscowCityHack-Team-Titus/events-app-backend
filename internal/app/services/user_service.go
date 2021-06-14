@@ -37,8 +37,12 @@ func (r *UserAuthenticationService) ChangeUser(req *RegisterUserJSON) (*models.U
 
 	var usr models.User
 
-	r.repo.GDB.First(&usr)
+	r.repo.GDB.Preload("Preferences").Find(&usr)
+
 	if &usr != nil {
+		if err := r.repo.GDB.Model(&usr).Association("Preferences").Clear(); err != nil {
+			return nil, err
+		}
 		usr.Age = req.Age
 		usr.Gender = req.Gender
 		usr.Preferences = prefs
